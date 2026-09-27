@@ -926,7 +926,18 @@ function startGame(worldMeta, data) {
     for (const [dx, dz] of offsets(3)) if (!world.getChunk(pcx + dx, pcz + dz)) world.generate(pcx + dx, pcz + dz);
     for (const [dx, dz] of offsets(2)) { const c = world.getChunk(pcx + dx, pcz + dz); if (c.dirty && neighborsReady(c)) meshChunk(c); }
     if (!data.player) {
-      player.pos[1] = world.surfaceHeight(Math.floor(player.pos[0]), Math.floor(player.pos[2])) + 1.01;
+      // Nearby open ground (not a tree top)
+      const bx = Math.floor(player.pos[0]), bz = Math.floor(player.pos[2]);
+      let best = null;
+      for (let r = 0; r <= 8 && !best; r++) {
+        for (let dz = -r; dz <= r && !best; dz++) for (let dx = -r; dx <= r && !best; dx++) {
+          if (Math.max(Math.abs(dx), Math.abs(dz)) !== r) continue;
+          const y = world.surfaceHeight(bx + dx, bz + dz);
+          const top = world.getBlock(bx + dx, y, bz + dz);
+          if (top === GRASS || top === SAND || top === SNOW || top === DIRT) best = [bx + dx + 0.5, y + 1.01, bz + dz + 0.5];
+        }
+      }
+      player.pos = best || [player.pos[0], world.surfaceHeight(bx, bz) + 1.01, player.pos[2]];
       spawn = [...player.pos];
     }
     applySettings();
