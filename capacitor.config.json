@@ -1,0 +1,8 @@
+{
+  "appId": "io.github.z1fire.blocks",
+  "appName": "Blocks",
+  "webDir": "dist",
+  "android": {
+    "backgroundColor": "#1b1410"
+  }
+}

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#1c1c1c" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon-192.png" />
+  <title>Blocks</title>
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <canvas id="view"></canvas>
+
+  <div id="hud" class="hidden">
+    <div id="crosshair"></div>
+    <svg id="hold-ring" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" /></svg>
+    <div id="info"></div>
+    <div id="stats">
+      <div id="hearts"></div>
+      <div id="bubbles"></div>
+    </div>
+    <div id="toast"></div>
+    <div id="hotbar-wrap">
+      <div id="hotbar"></div>
+      <button id="btn-inv" class="hud-btn" aria-label="Inventory">&#8943;</button>
+    </div>
+    <button id="btn-pause" class="hud-btn" aria-label="Pause">II</button>
+    <button id="btn-fly" class="hud-btn touch-only" aria-label="Fly">FLY</button>
+    <div id="touch-buttons" class="touch-only">
+      <button id="btn-down" class="hud-btn round hidden" aria-label="Down">&#9660;</button>
+      <button id="btn-jump" class="hud-btn round" aria-label="Jump">&#9650;</button>
+    </div>
+    <div id="joystick"><div id="joystick-knob"></div></div>
+  </div>
+  <div id="water-overlay"></div>
+  <div id="damage-overlay"></div>
+
+  <div id="menu-main" class="menu">
+    <h1 class="logo">BLOCKS</h1>
+    <p class="sub">a pocket voxel sandbox</p>
+    <button id="btn-continue">Continue</button>
+    <button id="btn-new">New World</button>
+    <button id="btn-settings-main">Settings</button>
+    <p class="hint desktop-only">WASD move · Space jump (double-tap to fly) · Mouse look · L-click break · R-click place · E inventory · 1-9 hotbar</p>
+    <p class="hint touch-only">Left side: move · Right side: look · Tap: place · Hold: break · Double-tap ▲: fly</p>
+  </div>
+
+  <div id="menu-new" class="menu hidden">
+    <h2>Create New World</h2>
+    <label>Seed <input id="seed-input" type="text" placeholder="random" maxlength="24" /></label>
+    <div class="seg" id="mode-seg">
+      <button data-mode="creative" class="on">Creative</button>
+      <button data-mode="survival">Survival</button>
+    </div>
+    <p class="hint" id="mode-hint">Unlimited blocks, flying, no damage.</p>
+    <p class="warn">This replaces your current world.</p>
+    <button id="btn-create">Create World</button>
+    <button id="btn-new-back" class="secondary">Back</button>
+  </div>
+
+  <div id="menu-pause" class="menu hidden">
+    <h2>Paused</h2>
+    <button id="btn-resume">Resume</button>
+    <button id="btn-settings-pause">Settings</button>
+    <button id="btn-quit">Save &amp; Quit to Title</button>
+  </div>
+
+  <div id="menu-settings" class="menu hidden">
+    <h2>Settings</h2>
+    <label>Render distance <span id="rd-val"></span><input id="set-rd" type="range" min="2" max="10" step="1" /></label>
+    <label>Look sensitivity <span id="sens-val"></span><input id="set-sens" type="range" min="0.3" max="3" step="0.1" /></label>
+    <label>Resolution <span id="res-val"></span><input id="set-res" type="range" min="0.5" max="2" step="0.25" /></label>
+    <label>Field of view <span id="fov-val"></span><input id="set-fov" type="range" min="55" max="100" step="1" /></label>
+    <label class="row"><input id="set-info" type="checkbox" /> Show coordinates &amp; FPS</label>
+    <label class="row"><input id="set-sound" type="checkbox" /> Sound effects</label>
+    <button id="btn-settings-back">Done</button>
+  </div>
+
+  <div id="inventory" class="menu hidden">
+    <h2>Blocks</h2>
+    <p class="hint">Tap a block to put it in the selected hotbar slot</p>
+    <div id="inv-grid"></div>
+    <button id="btn-inv-close">Close</button>
+  </div>
+
+  <div id="menu-dead" class="menu hidden dead">
+    <h2>You died!</h2>
+    <p id="death-msg" class="hint"></p>
+    <button id="btn-respawn">Respawn</button>
+  </div>
+
+  <div id="loading" class="hidden">Generating world…</div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
