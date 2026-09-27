@@ -31,6 +31,11 @@ jobs:
           distribution: temurin
           java-version: 21
 
+      - name: Compute version
+        run: |
+          V=$(node -p "require('./package.json').version.replace(/\.\d+$/, '.' + process.env.GITHUB_RUN_NUMBER)")
+          echo "APP_VERSION=$V" >> "$GITHUB_ENV"
+
       - name: Build web app
         run: |
           npm ci
@@ -52,7 +57,7 @@ jobs:
         working-directory: android
         env:
           VERSION_CODE: ${{ github.run_number }}
-          VERSION_NAME: 1.0.${{ github.run_number }}
+          VERSION_NAME: ${{ env.APP_VERSION }}
           BLOCKS_KEYSTORE_PASSWORD: ${{ secrets.BLOCKS_KEYSTORE_PASSWORD }}
           BLOCKS_KEY_ALIAS: ${{ secrets.BLOCKS_KEY_ALIAS }}
         run: |
@@ -69,7 +74,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v1.0.${{ github.run_number }}"
+          TAG="v$APP_VERSION"
           gh release create "$TAG" Blocks.apk \
             --title "Blocks $TAG" \
             --notes "Android build from ${GITHUB_SHA::7}. Download **Blocks.apk** on your phone and open it to install (allow installs from your browser if asked)." \
